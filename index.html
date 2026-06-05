@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aysha Riaz — Game Developer & .NET Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #080810; --bg2: #0e0e1a; --bg3: #13131f;
+    --accent: #e8ff47; --accent2: #ff4d6d;
+    --text: #f0eee8; --muted: #6b6b80; --border: rgba(255,255,255,0.07);
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-heading: 'Syne', sans-serif;
+    --font-body: 'DM Mono', monospace;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; line-height: 1.7; overflow-x: hidden; cursor: none; }
+  .cursor { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+  .cursor-ring { width: 36px; height: 36px; border: 1px solid rgba(232,255,71,0.4); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; transition: width 0.2s, height 0.2s; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 0; opacity: 0.018; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px 200px; }
+  section { position: relative; z-index: 1; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 4rem; border-bottom: 1px solid var(--border); backdrop-filter: blur(16px); background: rgba(8,8,16,0.6); }
+  .nav-logo { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: 0.08em; color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { padding: 0.45rem 1.2rem; border: 1px solid var(--accent); color: var(--accent) !important; border-radius: 2px; transition: background 0.2s, color 0.2s !important; }
+  .nav-cta:hover { background: var(--accent) !important; color: var(--bg) !important; }
+
+  #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 4rem 5rem; position: relative; overflow: hidden; }
+  .hero-grid-lines { position: absolute; inset: 0; background-image: linear-gradient(rgba(232,255,71,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(232,255,71,0.025) 1px, transparent 1px); background-size: 80px 80px; pointer-events: none; }
+  .hero-glow { position: absolute; top: -20%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(232,255,71,0.04) 0%, transparent 65%); pointer-events: none; }
+  .hero-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; }
+  .hero-tag::before { content: ''; display: block; width: 32px; height: 1px; background: var(--accent); }
+  .hero-title { font-family: var(--font-display); font-size: clamp(4.5rem, 11vw, 9.5rem); line-height: 0.9; letter-spacing: 0.02em; color: var(--text); margin-bottom: 0.3rem; }
+  .hero-title span { color: var(--accent); }
+  .hero-sub { font-family: var(--font-heading); font-size: clamp(1rem, 2vw, 1.4rem); font-weight: 400; color: var(--muted); margin-bottom: 2.5rem; max-width: 600px; line-height: 1.6; }
+  .hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .btn-primary { padding: 0.9rem 2.2rem; background: var(--accent); color: var(--bg); font-family: var(--font-body); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; border: none; border-radius: 2px; cursor: none; text-decoration: none; transition: transform 0.15s, box-shadow 0.15s; display: inline-block; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(232,255,71,0.25); }
+  .btn-ghost { padding: 0.9rem 2.2rem; background: transparent; color: var(--text); font-family: var(--font-body); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--border); border-radius: 2px; cursor: none; text-decoration: none; transition: border-color 0.2s; display: inline-block; }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.3); }
+  .hero-stats { position: absolute; right: 4rem; bottom: 5rem; display: flex; flex-direction: column; gap: 2rem; align-items: flex-end; }
+  .stat-item { text-align: right; }
+  .stat-num { font-family: var(--font-display); font-size: 2.8rem; color: var(--text); line-height: 1; }
+  .stat-label { font-size: 10px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
+
+  .section-wrap { padding: 7rem 4rem; }
+  .section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 4rem; }
+  .section-num { font-size: 11px; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; }
+  .section-title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4.5rem); letter-spacing: 0.03em; line-height: 1; }
+  .section-line { flex: 1; height: 1px; background: var(--border); margin-left: auto; max-width: 300px; }
+
+  #about { background: var(--bg2); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+  .about-text p { color: var(--muted); font-size: 14px; line-height: 1.9; margin-bottom: 1.2rem; }
+  .about-text p strong { color: var(--text); font-weight: 400; }
+  .about-links { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .skill-item { padding: 1rem 1.2rem; border: 1px solid var(--border); border-radius: 4px; transition: border-color 0.2s; }
+  .skill-item:hover { border-color: rgba(232,255,71,0.3); }
+  .skill-name { font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .skill-level { font-size: 10px; letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase; }
+
+  #projects { background: var(--bg); }
+  .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+  .project-card { background: var(--bg3); padding: 2rem; position: relative; overflow: hidden; transition: background 0.25s; }
+  .project-card:hover { background: #17172a; }
+  .project-card:hover .project-arrow { transform: translate(3px, -3px); }
+  .project-accent-bar { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+  .project-card:hover .project-accent-bar { transform: scaleX(1); }
+  .project-genre { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+  .project-name { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: 0.04em; line-height: 1.1; margin-bottom: 0.75rem; color: var(--text); }
+  .project-desc { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 1.2rem; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+  .tag { font-size: 10px; letter-spacing: 0.08em; padding: 3px 10px; border: 1px solid var(--border); border-radius: 2px; color: var(--muted); text-transform: uppercase; }
+  .project-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem; }
+  .project-link { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); text-decoration: none; transition: color 0.2s; }
+  .project-link:hover { color: var(--accent); }
+  .project-arrow { font-size: 18px; color: var(--accent); transition: transform 0.2s; line-height: 1; }
+
+  #experience { background: var(--bg2); }
+  .exp-list { display: flex; flex-direction: column; gap: 0; }
+  .exp-row { display: grid; grid-template-columns: 1fr auto; gap: 2rem; padding: 2.5rem 0; border-bottom: 1px solid var(--border); }
+  .exp-row:first-child { border-top: 1px solid var(--border); }
+  .exp-company { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: 0.04em; color: var(--text); margin-bottom: 0.3rem; }
+  .exp-role { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.8rem; }
+  .exp-desc { font-size: 13px; color: var(--muted); line-height: 1.8; max-width: 680px; }
+  .exp-period { font-size: 11px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; white-space: nowrap; margin-top: 0.3rem; }
+
+  #services { background: var(--bg); }
+  .services-list { display: flex; flex-direction: column; }
+  .service-row { display: grid; grid-template-columns: 3rem 1fr auto auto; align-items: center; gap: 2rem; padding: 1.8rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.2s; }
+  .service-row:first-child { border-top: 1px solid var(--border); }
+  .service-row:hover { padding-left: 1rem; }
+  .service-num { font-family: var(--font-display); font-size: 1.3rem; color: var(--accent); }
+  .service-name { font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .service-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .service-price { font-family: var(--font-display); font-size: 1.5rem; color: var(--text); white-space: nowrap; }
+  .service-badge { font-size: 10px; letter-spacing: 0.1em; padding: 4px 12px; border: 1px solid var(--border); color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+  .service-badge.hot { border-color: rgba(232,255,71,0.4); color: var(--accent); }
+
+  #contact { background: var(--bg2); text-align: center; padding: 8rem 4rem; }
+  .contact-eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .contact-eyebrow::before, .contact-eyebrow::after { content: ''; display: block; width: 32px; height: 1px; background: var(--accent); }
+  .contact-title { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6.5rem); letter-spacing: 0.02em; line-height: 0.95; margin-bottom: 1.5rem; }
+  .contact-sub { color: var(--muted); max-width: 480px; margin: 0 auto 3rem; font-size: 14px; line-height: 1.8; }
+  .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .contact-detail { font-size: 12px; color: var(--muted); margin-top: 2rem; letter-spacing: 0.08em; }
+  .contact-detail a { color: var(--accent); text-decoration: none; }
+
+  footer { padding: 2rem 4rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-tag  { animation: fadeUp 0.6s 0.1s both; }
+  .hero-title{ animation: fadeUp 0.7s 0.25s both; }
+  .hero-sub  { animation: fadeUp 0.7s 0.4s both; }
+  .hero-actions { animation: fadeUp 0.7s 0.55s both; }
+  .hero-stats { animation: fadeUp 0.7s 0.65s both; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    #hero, .section-wrap, #contact { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .hero-stats { display: none; }
+    .about-grid, .projects-grid { grid-template-columns: 1fr; }
+    .exp-row { grid-template-columns: 1fr; }
+    .service-row { grid-template-columns: 2.5rem 1fr; }
+    .service-price, .service-badge { display: none; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-logo">AYSHA RIAZ</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact" class="nav-cta">Hire Me</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-lines"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-tag">5 years experience · Available for freelance</div>
+  <h1 class="hero-title">UNITY<br>GAME<br><span>DEVELOPER</span></h1>
+  <p class="hero-sub">Senior software engineer specializing in Unity 2D/3D games, multiplayer systems, and .NET full-stack development. Shipped 10+ games to production across mobile, PC, and WebGL.</p>
+  <div class="hero-actions">
+    <a href="#projects" class="btn-primary">View My Work</a>
+    <a href="https://www.linkedin.com/in/aysha-riaz" target="_blank" class="btn-ghost">LinkedIn ↗</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Games shipped</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">5 YRS</div>
+      <div class="stat-label">Professional exp.</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100+</div>
+      <div class="stat-label">WebGL games (N2Y)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">ABOUT ME</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm <strong>Aysha Riaz</strong>, a Senior Software Engineer with 5 years of professional experience building Unity games and .NET applications. Most recently at <strong>GenITeam Solutions</strong>, one of Pakistan's top game studios, where I shipped multiplayer board games, hypercasual titles, and 100+ educational WebGL games.</p>
+        <p>My work spans the full game development pipeline — from <strong>game logic and UI/UX</strong> to multiplayer networking with Photon, backend integration with PlayFab & Firebase, and cross-platform deployment to iOS, Android, and WebGL.</p>
+        <p>I also bring strong <strong>full-stack web development</strong> skills in React and .NET — making me a rare developer who can build both the game and its web infrastructure.</p>
+        <div class="about-links">
+          <a href="mailto:ayshariaz49@gmail.com" class="btn-primary">ayshariaz49@gmail.com</a>
+          <a href="https://www.linkedin.com/in/aysha-riaz" target="_blank" class="btn-ghost">LinkedIn ↗</a>
+        </div>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-item">
+          <div class="skill-name">Unity 2D / 3D</div>
+          <div class="skill-level">Expert · 5 yrs</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">C# / .NET</div>
+          <div class="skill-level">Expert · 5 yrs</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Photon Networking</div>
+          <div class="skill-level">Advanced</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">PlayFab & Firebase</div>
+          <div class="skill-level">Advanced</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Mobile (iOS/Android)</div>
+          <div class="skill-level">Advanced</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">WebGL / Browser</div>
+          <div class="skill-level">Advanced</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">React</div>
+          <div class="skill-level">Intermediate</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">SQL & REST APIs</div>
+          <div class="skill-level">Advanced</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">SELECTED WORK</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-accent-bar"></div>
+        <div class="project-genre">Mobile · Virtual Pet / Mini-Games</div>
+        <div class="project-name">DANI & ROBI</div>
+        <iframe src="https://www.youtube.com/embed/H1FkEO8j4uU?list=PL02ztw6VYQgt0R1IKQ5VyzfCaX4g6xEpu" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:200px;border-radius:4px;margin-bottom:1rem;"></iframe>
+        <p class="project-desc">An adorable virtual pet experience featuring two interactive characters — pet them, feed them, dress them up, and watch them react. Packed with a variety of built-in mini-games including cooking challenges, music rhythm, and arcade-style activities to keep players hooked. Combines the charm of Talking Tom with deeper engagement through a rich mini-game loop and expressive character animations.</p>
+        <div class="project-tags">
+          <span class="tag">Unity</span><span class="tag">Virtual Pet</span><span class="tag">Mini-Games</span><span class="tag">Mobile</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-link">Interactive · Family</span>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-accent-bar"></div>
+        <div class="project-genre">Mobile · Tower Defense / Survival</div>
+        <div class="project-name">LAST TOWER SURVIVAL</div>
+        <iframe src="https://www.youtube.com/embed/knTgPDsSuHI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:200px;border-radius:4px;margin-bottom:1rem;"></iframe>
+        <p class="project-desc">A gripping tower defense survival game where your last stronghold is all that stands between civilization and chaos. Build and upgrade defensive towers, manage resources under pressure, and fend off relentless waves of enemies with escalating difficulty. Features strategic depth with multiple tower types, enemy AI pathfinding, and a satisfying progression system that keeps players coming back for one more wave.</p>
+        <div class="project-tags">
+          <span class="tag">Unity</span><span class="tag">Tower Defense</span><span class="tag">Enemy AI</span><span class="tag">Mobile</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-link">Strategy · Survival</span>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-accent-bar"></div>
+        <div class="project-genre">PC / Mobile · Multiplayer Strategy</div>
+        <div class="project-name">LEGIONS WARFARE</div>
+        <p class="project-desc">Board-style chess game in Unity 3D with real-time multiplayer, realtime leaderboards, and social logins (Google, Facebook, Apple). Full game logic, UI/UX, and plugin integration.</p>
+        <div class="project-tags">
+          <span class="tag">Unity 3D</span><span class="tag">Photon</span><span class="tag">PlayFab</span><span class="tag">Firebase</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-link">Strategy · 6 months</span>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-accent-bar"></div>
+        <div class="project-genre">Mobile · Hypercasual</div>
+        <div class="project-name">SAVE THE HOUSE</div>
+        <p class="project-desc">Hypercasual Unity 3D game featuring level-based challenges and soft-body ragdoll physics. Defend a house from robbers with punching mechanics and realistic motion simulation.</p>
+        <div class="project-tags">
+          <span class="tag">Unity 3D</span><span class="tag">Ragdoll Physics</span><span class="tag">Android</span>
+        </div>
+        <div class="project-footer">
+          <a href="https://play.google.com/store/search?q=Save%20the%20house&c=apps" target="_blank" class="project-link">Play Store ↗</a>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-accent-bar"></div>
+        <div class="project-genre">WebGL · Educational</div>
+        <div class="project-name">N2Y GAMES</div>
+        <p class="project-desc">100+ educational WebGL games built in Unity 2D for children with special needs. Accessible controls, animated UI, math matching activities, and full cross-platform optimization.</p>
+        <div class="project-tags">
+          <span class="tag">Unity 2D</span><span class="tag">WebGL</span><span class="tag">Accessibility</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-link">WebGL · Educational</span>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-accent-bar"></div>
+        <div class="project-genre">PC / Mobile · Multiplayer</div>
+        <div class="project-name">TEWT</div>
+        <p class="project-desc">Multiplayer board chess supporting up to 6 players across quick, team, and AI modes. Photon networking, PlayFab backend, AI opponent logic, and multi-platform social logins.</p>
+        <div class="project-tags">
+          <span class="tag">Unity 3D</span><span class="tag">Photon</span><span class="tag">AI Logic</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-link">6-Player Multiplayer</span>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-accent-bar"></div>
+        <div class="project-genre">Mobile · Arcade</div>
+        <div class="project-name">PIZZA FLIP</div>
+        <p class="project-desc">Endless and level-based jumping game with softbody and jiggle physics for satisfying animations. Dynamic obstacle challenges with escalating difficulty curve.</p>
+        <div class="project-tags">
+          <span class="tag">Unity</span><span class="tag">Softbody Physics</span><span class="tag">Mobile</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-link">Hypercasual</span>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-accent-bar"></div>
+        <div class="project-genre">Mobile · AI / Chat</div>
+        <div class="project-name">FRIEND GPT</div>
+        <p class="project-desc">AI chat companion game with engaging dialogue systems and character animations. Published to Google Play Store with live users.</p>
+        <div class="project-tags">
+          <span class="tag">Unity</span><span class="tag">AI Integration</span><span class="tag">Android</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-link">Mobile · AI Chat</span>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">EXPERIENCE</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-list">
+      <div class="exp-row">
+        <div>
+          <div class="exp-company">GENITEAM SOLUTIONS</div>
+          <div class="exp-role">Senior Software Engineer</div>
+          <p class="exp-desc">Developed and maintained interactive games using Unity and .NET. Led optimization efforts, participated in code reviews, and mentored junior developers. Shipped multiplayer games, hypercasual titles, and 100+ educational WebGL games for the N2Y platform.</p>
+        </div>
+        <div class="exp-period">Feb 2020 – Jan 2025</div>
+      </div>
+      <div class="exp-row">
+        <div>
+          <div class="exp-company">RASHFLASH</div>
+          <div class="exp-role">Associate Software Engineer — Fullstack</div>
+          <p class="exp-desc">Built frontend and backend modules for web applications using React and .NET. Designed RESTful APIs, integrated third-party services, and improved UI/UX across multiple products.</p>
+        </div>
+        <div class="exp-period">Sep 2019 – Feb 2020</div>
+      </div>
+      <div class="exp-row">
+        <div>
+          <div class="exp-company">AMCO IT SOLUTIONS</div>
+          <div class="exp-role">Frontend Developer</div>
+          <p class="exp-desc">Built responsive websites using HTML, CSS (Bootstrap), and JavaScript. Also contributed to backend development using .NET for web applications.</p>
+        </div>
+        <div class="exp-period">Earlier</div>
+      </div>
+      <div class="exp-row">
+        <div>
+          <div class="exp-company">MADSOLE</div>
+          <div class="exp-role">Fullstack Developer</div>
+          <p class="exp-desc">Fullstack development using Laravel — backend APIs, database design, user authentication, and frontend integration. Managed deployment and code optimization.</p>
+        </div>
+        <div class="exp-period">Earlier</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">FIVERR SERVICES</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="services-list">
+      <div class="service-row">
+        <div class="service-num">01</div>
+        <div>
+          <div class="service-name">Unity Game Development (2D/3D)</div>
+          <div class="service-desc">Full game from concept to launch — mobile, PC, or WebGL</div>
+        </div>
+        <div class="service-price">From $150</div>
+        <span class="service-badge hot">Most Popular</span>
+      </div>
+      <div class="service-row">
+        <div class="service-num">02</div>
+        <div>
+          <div class="service-name">Multiplayer Integration (Photon / Mirror)</div>
+          <div class="service-desc">Add real-time multiplayer, lobbies, leaderboards, and matchmaking</div>
+        </div>
+        <div class="service-price">From $100</div>
+        <span class="service-badge hot">High Demand</span>
+      </div>
+      <div class="service-row">
+        <div class="service-num">03</div>
+        <div>
+          <div class="service-name">Game Mechanics & Systems</div>
+          <div class="service-desc">Combat, inventory, AI opponents, physics, UI — clean & documented C#</div>
+        </div>
+        <div class="service-price">From $50</div>
+        <span class="service-badge">Quick Delivery</span>
+      </div>
+      <div class="service-row">
+        <div class="service-num">04</div>
+        <div>
+          <div class="service-name">PlayFab / Firebase Backend</div>
+          <div class="service-desc">Player authentication (Google, Facebook, Apple), cloud saves, leaderboards</div>
+        </div>
+        <div class="service-price">From $80</div>
+        <span class="service-badge">Specialized</span>
+      </div>
+      <div class="service-row">
+        <div class="service-num">05</div>
+        <div>
+          <div class="service-name">Bug Fixing & Optimization</div>
+          <div class="service-desc">Fix crashes, improve performance, refactor messy Unity/C# code</div>
+        </div>
+        <div class="service-price">From $30</div>
+        <span class="service-badge">Fast Turnaround</span>
+      </div>
+      <div class="service-row">
+        <div class="service-num">06</div>
+        <div>
+          <div class="service-name">Playable Ad Development (Luna)</div>
+          <div class="service-desc">Lightweight interactive ad creatives for mobile game campaigns</div>
+        </div>
+        <div class="service-price">From $60</div>
+        <span class="service-badge">Unique Skill</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-eyebrow">Available for freelance work</div>
+  <h2 class="contact-title">LET'S BUILD<br>YOUR GAME</h2>
+  <p class="contact-sub">Senior Unity developer with 5 years of professional studio experience, now available for freelance projects. Fast delivery, clean code, and clear communication.</p>
+  <div class="contact-links">
+    <a href="mailto:ayshariaz49@gmail.com" class="btn-primary">Email Me</a>
+    <a href="https://www.linkedin.com/in/aysha-riaz" target="_blank" class="btn-ghost">LinkedIn ↗</a>
+  </div>
+  <p class="contact-detail">📍 Sialkot, Pakistan &nbsp;·&nbsp; Available worldwide &nbsp;·&nbsp; <a href="tel:+923224757557">+92 322 4757557</a></p>
+</section>
+
+<footer>
+  <span>© 2026 Aysha Riaz — Unity Game Developer & .NET Engineer</span>
+  <span>Sialkot, Pakistan</span>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.transform = `translate(${mx - 5}px, ${my - 5}px)`;
+  });
+  (function animRing() {
+    rx += (mx - rx - 18) * 0.12;
+    ry += (my - ry - 18) * 0.12;
+    ring.style.transform = `translate(${rx}px, ${ry}px)`;
+    requestAnimationFrame(animRing);
+  })();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.style.width = '52px'; ring.style.height = '52px'; });
+    el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; });
+  });
+</script>
+</body>
+</html>
